@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 public class MainActivityFragment extends Fragment
 {  private MovieAdapter mMovieAdapter;
     public static Movie[] movieDetails = new Movie[20];
+    public static boolean sort=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
