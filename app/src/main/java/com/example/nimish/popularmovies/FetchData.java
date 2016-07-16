@@ -1,5 +1,7 @@
 package com.example.nimish.popularmovies;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -23,6 +25,7 @@ public class FetchData extends AsyncTask<Void, Void, Movie[]> {
     HttpURLConnection urlConnection = null;
     BufferedReader reader = null;
     String movieinfo = null;
+
     String movieDbUrl = null;
 
      //use api by BuildConfig.THE_MOVIE_DB_API_TOKEN)

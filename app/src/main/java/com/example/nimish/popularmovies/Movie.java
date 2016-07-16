@@ -10,6 +10,7 @@ public class Movie {
     private String title;
     private String releaseDate;
 
+
     public Movie(){}
 
     public Movie(String posterPath, String overview, String title, String releaseDate) {
