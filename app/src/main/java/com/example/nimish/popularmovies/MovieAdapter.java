@@ -1,60 +1,52 @@
 package com.example.nimish.popularmovies;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
  * Created by Nimish on 10-Jul-16.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
-
-  List<Movie> list;
-    public Context context;
-    public Activity activity;
-    public View view;
-
-    public MovieAdapter(Context context, Activity activity, View view) {
-        this.context = context;
-        this.activity = activity;
-        this.view = view;
+public class MovieAdapter extends ArrayAdapter<Movie>{
+    public MovieAdapter( Context mContext, List<Movie> movieList ){
+        super( mContext, R.layout.grid_item, movieList);
     }
 
-    public MovieAdapter(FragmentActivity context, List<Movie> list) {
-        this.list = list;
-        this.context=context;
+    public static class ViewHolder{
+        ImageView imageView;
     }
 
     @Override
-    public MovieAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
+    public View getView(int position, View convertView, ViewGroup parent){
 
-    @Override
-    public void onBindViewHolder(MovieAdapter.ViewHolder holder, int position) {
+        Movie movie = getItem(position);
+        ViewHolder viewHolder;
+        String url = movie.getPosterPath();
 
-    }
+        if( convertView == null ) {
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from( getContext());
+            convertView = inflater.inflate(R.layout.grid_item, parent, false);
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.img);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-   // this class contains the data which inflate over recyclerView
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView iView;
-        View mView;
+        Picasso.with( getContext())
+                .load(url)
+                .placeholder(R.drawable.image)
+                .error(R.drawable.image)
+                .into(viewHolder.imageView);
 
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-            iView = (ImageView) itemView.findViewById(R.id.img);
-          }
+        return convertView;
     }
 }
