@@ -46,7 +46,7 @@
                 android:id="@+id/text_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Release"
+                android:text="@string/Release"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingBottom="8dp"
@@ -72,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rating"
+                android:text="@string/Rating"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:paddingBottom="8dp"
