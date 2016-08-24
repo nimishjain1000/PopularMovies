@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -63,7 +64,7 @@ public class MainActivityFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if( id ==    R.id.settings){
+        if( id ==R.id.settings){
             Intent intent = new Intent( getActivity(), SettingActivity.class );
             startActivity(intent);
             return true;
@@ -107,7 +108,19 @@ public class MainActivityFragment extends Fragment
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_for_posters);
         gridView.setAdapter( myAdapter );
 
-        return rootView;
+        gridView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie movie = myAdapter.getItem( position);
+                Intent intent = new Intent( getActivity(), Detail.class).putExtra(Intent.EXTRA_TEXT, movie);
+                startActivity(intent);
+            }
+        });
+
+
+
+
+                return rootView;
     }
 
     public class FetchMovies extends AsyncTask< String, Void, Movie[] > {
@@ -216,9 +229,9 @@ public class MainActivityFragment extends Fragment
         @Override
         protected void onPostExecute(Movie[] movies) {
             if( movies != null ) {
-                mMovieAdapter.clear();
+                myAdapter.clear();
                 for (Movie movie: movies) {
-                    mMovieAdapter.add(movie);
+                    myAdapter.add(movie);
                 }
             }
         }
