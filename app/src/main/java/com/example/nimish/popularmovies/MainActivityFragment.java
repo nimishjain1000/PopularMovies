@@ -1,7 +1,5 @@
 package com.example.nimish.popularmovies;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -22,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -45,25 +41,13 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivityFragment extends Fragment
 {  public static MovieAdapter mMovieAdapter;
 
-    public static Movie[] movieDetails = new Movie[20];
-    public static boolean sort=false;
-    public static View view;
-    public static Activity activity;
-    public static Context context;
-    Movie[] movieList = {};
-  //  public static Communicator com;
-    ImageView imageView;
+    private MovieAdapter myAdapter;
 
-
-
-
-    @TargetApi(Build.VERSION_CODES.M)
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate( savedInstanceState);
 
-
+        setHasOptionsMenu( true );
     }
 
     @Override
@@ -76,12 +60,6 @@ public class MainActivityFragment extends Fragment
         inflater.inflate(R.menu.main,menu);
     }
 
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        updateMovies();
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -93,12 +71,10 @@ public class MainActivityFragment extends Fragment
         return super.onOptionsItemSelected( item );
     }
 
-
-
-    public boolean isOnline(){
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        return info != null && info.isConnectedOrConnecting();
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateMovies();
     }
 
     public void updateMovies(){
@@ -107,30 +83,31 @@ public class MainActivityFragment extends Fragment
         sortOrder = preferences.getString( getString(R.string.sort_order), getString(R.string.pref_sort_most_popular));
         if( isOnline() ) {
             FetchMovies fetchMovies = new FetchMovies();
-            if(sortOrder=="popular?")
-            fetchMovies.execute();// put string here in arguments
+            fetchMovies.execute( sortOrder );
         } else {
-            Toast.makeText(context,"Please turn on an active internet connection",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Please turn on an active internet connection",Toast.LENGTH_SHORT).show();
         }
     }
 
+    public boolean isOnline(){
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return info != null && info.isConnectedOrConnecting();
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
-// ????????????????????????????????
-        //mMovieAdapter =
-            //    new MovieAdapter(getActivity(),new Movie(),R.layout.grid_item);
-        mMovieAdapter = new MovieAdapter(
+        myAdapter = new MovieAdapter(
                 getActivity(),
                 new ArrayList<Movie>()
         );
 
         View rootView = inflater.inflate( R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_for_posters);
-        gridView.setAdapter( mMovieAdapter );
-return rootView;
+        gridView.setAdapter( myAdapter );
+
+        return rootView;
     }
 
     public class FetchMovies extends AsyncTask< String, Void, Movie[] > {
